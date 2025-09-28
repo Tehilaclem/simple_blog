@@ -3,14 +3,30 @@
 {% block content %}
 <h2 class="mb-3">All Blog Posts</h2>
 
+<!-- Search Bar -->
+<form method="get" class="d-flex mb-3">
+    <input type="text" name="q" class="form-control me-2" 
+           placeholder="Search posts..." value="{{ query }}">
+    <button type="submit" class="btn btn-outline-primary">Search</button>
+</form>
+
+<!-- Post List -->
 <div class="list-group">
-    {% for post in posts %}
-        <a href="{% url 'post_detail' post.pk %}" class="list-group-item list-group-item-action">
-            <h5 class="mb-1">{{ post.title }}</h5>
-            <small class="text-muted">By {{ post.author }} on {{ post.created_at|date:"M d, Y" }}</small>
-        </a>
-    {% empty %}
-        <p>No posts yet. <a href="{% url 'post_create' %}">Create one?</a></p>
-    {% endfor %}
+    {% if posts %}
+        {% for post in posts %}
+            <a href="{% url 'post_detail' post.pk %}" class="list-group-item list-group-item-action">
+                <h5 class="mb-1">{{ post.title }}</h5>
+                <small class="text-muted">
+                    By {{ post.author }} on {{ post.created_at|date:"M d, Y" }}
+                </small>
+            </a>
+        {% endfor %}
+    {% else %}
+        {% if query %}
+            <p>No results found for "<strong>{{ query }}</strong>".</p>
+        {% else %}
+            <p>No posts yet. <a href="{% url 'post_create' %}">Create one?</a></p>
+        {% endif %}
+    {% endif %}
 </div>
 {% endblock %}
